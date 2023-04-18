@@ -25,24 +25,24 @@ with open(CSV_PATH, encoding='utf-8') as election_data_file:  # opens file
             votes_per_candidate[candidate_name] += 1
         else:
             votes_per_candidate[candidate_name] = 1
+            print(candidate_name)
 for item in votes_per_candidate:
     percentages_per_candidate[item] = round(
-        (votes_per_candidate[item]/total_votes)*100)
-    # for item in votes_per_candidate:
-    candidate_percentage = f"{candidate_name} {percentages_per_candidate[item]}"
-    print(candidate_percentage)
+        ((votes_per_candidate[item]/total_votes)*100), 3)
+    print(
+        f"{percentages_per_candidate[item]}% ({votes_per_candidate[item]})")
 
-    # print(votes_per_candidate)
-    # print(percentages_per_candidate)
-    # output = (
-    #     "Election Results\n"
-    #     "------------------------------\n"
-    #     f"Total Votes: {total_votes} \n"
-    #     "------------------------------\n"
-    #     f'{votes_per_candidate}: {candidate_percentage}\n'
-    # )
-    # print(output)
-    # election_data_file.seek(0)
+# print(votes_per_candidate)
+# print(percentages_per_candidate)
+# output = (
+#     "Election Results\n"
+#     "------------------------------\n"
+#     f"Total Votes: {total_votes} \n"
+#     "------------------------------\n"
+#     f'{votes_per_candidate}: {candidate_percentage}\n'
+# )
+# print(output)
+# election_data_file.seek(0)
 
 # print("Election Results")
 # print("--------------------------------")

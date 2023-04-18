@@ -1,36 +1,56 @@
-# finding total months
+# help on coding with indentation, the for loop and formatting from TA Sunshine via AskBCS
+# imports
 import csv
+
+# defining variables
 csvpath = "Resources/budget_data.csv"
-with open(csvpath, encoding='utf') as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=",")
-    next(csv_reader, None)
-    Total_Months = len(list(csv_reader))
-    print("Financial Analysis")
-    print("------------------------------")
-    print(f"Total Months: {Total_Months}")
+total_months = 0
+net_total = 0
+change = 0
+max_change = 0
+min_change = -1
+average_change = 0
+change_total = 0
 
-    csv_file.seek(0)
-    next(csv_reader, None)
-    NetTotal = 0
-    rows = []
+with open(csvpath, encoding='utf-8') as csv_file:
+    csv_reader = csv.reader(csv_file)
+    header = next(csv_reader)  # storing header
+    previous_total = 0  # setting variable
     for row in csv_reader:
-        NetTotal = NetTotal + int(row[1])
-        rows.append(int(row[1]))
-    ProfitLoss = [rows[i + 1] - rows[i] for i in range(len(rows)-1)]
-    ProfitLossTotal = sum(ProfitLoss)
-    ProfitLossAverage = ProfitLossTotal/85
-    print(f"Average Change: ${ProfitLossAverage:.2f}")
-    print(f"Total: ${NetTotal}")
+        # calculating total months by counting every row looped through to get to total
+        total_months += 1
+        # calculating net total by adding every value in profit/loss column to the one before it
+        net_total = net_total + int(row[1])
+        # setting current total as the value in the current row profit/loss column
+        current_total = int(row[1])
+        # calculating the change in profit/loss between previous row and current row
+        if previous_total == 0:
+            previous_total = current_total
+        else:
+            change = current_total - previous_total
+            change_total += change
+            # previous_change = current_total - previous_total
+            # resetting previous_total as current profit/loss value for the loop
+            previous_total = int(row[1])
+            if change > max_change:  # finding max change and date
+                max_change = change
+                max_date = row[0]
+            elif change < min_change:  # finding min change and date
+                min_change = change
+                min_date = row[0]
+average_change = round(change_total/(total_months - 1), 2)
 
-with open(csvpath, encoding='utf') as csv_file:
-    # opening file and allowing python to access and work the csv file; and we want to keep working on it so saving as a variable
-    csv_reader = csv.reader(csv_file, delimiter=",")
-    next(csv_reader, None)
-    rows = []
-    for row in csv_reader:
-        rows.append(int(row[1]))
-    Change = [rows[i + 1] - rows[i] for i in range(len(rows)-1)]
-    Max = max(Change)
-    Min = min(Change)
-    print(f"Greatest Increase in Profits: ${Max}")
-    print(f"Greatest Decrease in Profits: ${Min}")
+# exports
+output = (
+    f"Financial Analysis\n"
+    f"--------------------------------------\n"
+    f"Total Months: {total_months}\n"
+    f"Total: ${net_total}\n"
+    f"Average Change: ${average_change}\n"
+    f"Greatest Increase in Profits: {max_date} (${max_change})\n"
+    f"Greatest Decrease in Profits: {min_date} (${min_change})\n"
+)
+print(output)
+
+with open('PyBank.txt', 'w') as f:
+    f.write(output)
