@@ -1,11 +1,16 @@
 # imports
 import csv
 import os
+import sys
 
 
 # constants
 CSV_PATH = os.path.join("Resources", "election_data.csv")
 CANDIDATE_NAME_IDX = 2
+TEXT_PATH = os.path.join("PyPoll.txt")
+# sys.stdout = open(TEXT_PATH, 'w')
+
+Text = open(TEXT_PATH, 'w')
 
 # variables
 total_votes = 0
@@ -25,30 +30,29 @@ with open(CSV_PATH, encoding='utf-8') as election_data_file:  # opens file
             votes_per_candidate[candidate_name] += 1
         else:
             votes_per_candidate[candidate_name] = 1
-            print(candidate_name)
-for item in votes_per_candidate:
-    percentages_per_candidate[item] = round(
-        ((votes_per_candidate[item]/total_votes)*100), 3)
-    print(
-        f"{percentages_per_candidate[item]}% ({votes_per_candidate[item]})")
 
-# print(votes_per_candidate)
-# print(percentages_per_candidate)
-# output = (
-#     "Election Results\n"
-#     "------------------------------\n"
-#     f"Total Votes: {total_votes} \n"
-#     "------------------------------\n"
-#     f'{votes_per_candidate}: {candidate_percentage}\n'
-# )
-# print(output)
-# election_data_file.seek(0)
+with open(CSV_PATH, encoding='utf-8') as election_data_file:  # opens file
+    poll_reader = csv.reader(election_data_file)
+    print("Election Results", file=Text)
+    print("Election Results")
+    print("----------------------------", file=Text)
+    print("----------------------------")
+    print(f"Total Votes: {total_votes}", file=Text)
+    print(f"Total Votes: {total_votes}")
+    print("----------------------------", file=Text)
+    print("----------------------------")
+    for item in votes_per_candidate:
+        percentages_per_candidate[item] = round(
+            ((votes_per_candidate[item]/total_votes)*100), 3)
+        output = (f"{item} {percentages_per_candidate[item]} % ({votes_per_candidate[item]})"
+                  )
+        print(output, file=Text)
+        print(output)
+        winner_name = max(votes_per_candidate, key=votes_per_candidate.get)
+print("-------------------------------", file=Text)
+print("-------------------------------")
+print(f"Winner: {winner_name}", file=Text)
+print(f"Winner: {winner_name}")
+Text.close()
 
-# print("Election Results")
-# print("--------------------------------")
-# print(f"Total Votes: {total_votes}")
-# print("---------------------------------")
-
-# needed this url to figure out this code https://stackoverflow.com/questions/37438550/how-can-i-count-occurrences-of-values-in-a-list-of-dicts
-# Ask the Class Slack and study group and tutor and talking to Aaron, Kirsten, Aaron O., and Joanna from class also helped with figuring out needing to use dictionaries
-# Joanna pointed me towards the Collections import for python and the counter function
+# item = candidate in my dictionary
