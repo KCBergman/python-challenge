@@ -1,8 +1,8 @@
-# help on coding with indentation, the for loop and formatting from TA Sunshine via AskBCS
 # imports
 import csv
 
-# defining variables
+
+# variables
 csvpath = "Resources/budget_data.csv"
 total_months = 0
 net_total = 0
@@ -12,35 +12,36 @@ min_change = -1
 average_change = 0
 change_total = 0
 
+# open csv_file and store header
 with open(csvpath, encoding='utf-8') as csv_file:
     csv_reader = csv.reader(csv_file)
     header = next(csv_reader)  # storing header
-    previous_total = 0  # setting variable
+    previous_total = 0
+    # for loop to find total months, net total, maximum increase, and maximum decrease in profits
     for row in csv_reader:
-        # calculating total months by counting every row looped through to get to total
         total_months += 1
-        # calculating net total by adding every value in profit/loss column to the one before it
         net_total = net_total + int(row[1])
-        # setting current total as the value in the current row profit/loss column
         current_total = int(row[1])
-        # calculating the change in profit/loss between previous row and current row
         if previous_total == 0:
+            # set previous total to current total for the first row
             previous_total = current_total
         else:
             change = current_total - previous_total
             change_total += change
-            # previous_change = current_total - previous_total
-            # resetting previous_total as current profit/loss value for the loop
+            # set the previous total to current total for all subsequent rows
             previous_total = int(row[1])
-            if change > max_change:  # finding max change and date
+            if change > max_change:
                 max_change = change
                 max_date = row[0]
-            elif change < min_change:  # finding min change and date
+            elif change < min_change:
                 min_change = change
                 min_date = row[0]
+
+# finding average change in profits/losses for the entire period
+# need to minus 1 from total months because there will be one less change than items
 average_change = round(change_total/(total_months - 1), 2)
 
-# exports
+# output statement
 output = (
     f"Financial Analysis\n"
     f"--------------------------------------\n"
@@ -50,7 +51,8 @@ output = (
     f"Greatest Increase in Profits: {max_date} (${max_change})\n"
     f"Greatest Decrease in Profits: {min_date} (${min_change})\n"
 )
-print(output)
 
+print(output)
+# write output statement to text file
 with open('PyBank.txt', 'w') as f:
     f.write(output)

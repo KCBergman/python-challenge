@@ -1,28 +1,27 @@
 # imports
 import csv
 import os
-import sys
 
 
 # constants
 CSV_PATH = os.path.join("Resources", "election_data.csv")
 CANDIDATE_NAME_IDX = 2
-TEXT_PATH = os.path.join("PyPoll.txt")
-# sys.stdout = open(TEXT_PATH, 'w')
-
-Text = open(TEXT_PATH, 'w')
 
 # variables
 total_votes = 0
 votes_per_candidate = {}
 percentages_per_candidate = {}
 
-# inputs
+TEXT_PATH = os.path.join("PyPoll.txt")
+# opens text file in order to write print statements to it
+Text = open(TEXT_PATH, 'w')
+
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
-with open(CSV_PATH, encoding='utf-8') as election_data_file:  # opens file
-    poll_reader = csv.reader(election_data_file)  # reads files
-    header = next(poll_reader)  # stores file
-    # for loop
+# open csv file, read csv file, and  store header
+with open(CSV_PATH, encoding='utf-8') as election_data_file:
+    poll_reader = csv.reader(election_data_file)
+    header = next(poll_reader)
+    # for loop to find total votes and find and store votes per candidate in dictionary
     for row in poll_reader:
         total_votes += 1
         candidate_name = row[CANDIDATE_NAME_IDX]
@@ -31,8 +30,10 @@ with open(CSV_PATH, encoding='utf-8') as election_data_file:  # opens file
         else:
             votes_per_candidate[candidate_name] = 1
 
-with open(CSV_PATH, encoding='utf-8') as election_data_file:  # opens file
+# open and read csv file
+with open(CSV_PATH, encoding='utf-8') as election_data_file:
     poll_reader = csv.reader(election_data_file)
+    # multiple print statements to print both to console and text file
     print("Election Results", file=Text)
     print("Election Results")
     print("----------------------------", file=Text)
@@ -41,18 +42,19 @@ with open(CSV_PATH, encoding='utf-8') as election_data_file:  # opens file
     print(f"Total Votes: {total_votes}")
     print("----------------------------", file=Text)
     print("----------------------------")
-    for item in votes_per_candidate:
-        percentages_per_candidate[item] = round(
-            ((votes_per_candidate[item]/total_votes)*100), 3)
-        output = (f"{item} {percentages_per_candidate[item]} % ({votes_per_candidate[item]})"
-                  )
+    # for loop to find percentages of votes per candidate
+    for candidate in votes_per_candidate:
+        percentages_per_candidate[candidate] = round(
+            ((votes_per_candidate[candidate]/total_votes)*100), 3)
+        output = (f"{candidate} {percentages_per_candidate[candidate]} % ({votes_per_candidate[candidate]})"
+                  )  # formatted string as output variable
         print(output, file=Text)
         print(output)
+        # max function to find winner
         winner_name = max(votes_per_candidate, key=votes_per_candidate.get)
 print("-------------------------------", file=Text)
 print("-------------------------------")
 print(f"Winner: {winner_name}", file=Text)
 print(f"Winner: {winner_name}")
-Text.close()
 
-# item = candidate in my dictionary
+Text.close()  # closes text file after all print statements
